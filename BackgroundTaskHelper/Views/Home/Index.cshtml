@@ -1,0 +1,50 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+	@Html.AntiForgeryToken()
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+	<button class="btn btn-outline-dark" data-a="0" data-b="0" onclick="TestData(this)">Show</button>
+	<button class="btn btn-outline-dark" data-a="10" data-b="3" onclick="TestData(this)">Show</button>
+	<button class="btn btn-outline-dark" data-a="8" data-b="2" onclick="TestData(this)">Show</button>
+    <label id="test"></label>
+</div>
+<script>
+	function TestData(obj){
+		var formData = new FormData();
+		formData.append('a',$(obj).data('a'));
+		formData.append('b', $(obj).data('b'));
+		$.ajax({
+			type:'POST',
+			url: '@Url.Content("~/")' + 'Home/Show',
+			beforeSend: function(xhr){
+				xhr.setRequestHeader("RequestVerificationToken", $('input:hidden[name="__RequestVerificationToken"]').val());
+			},
+			data: formData,
+			async: true,
+			cache: false,
+			contentType: false,
+			processData: false,
+			success: function (result) {
+				if(result.success){
+					if(result.data.length!=0){
+						$('#test').text(result.data);
+					}
+					else{
+						$('#test').text(result.data);
+					}
+				}
+				else{
+					$('#test').text(result.data);
+				}
+			},
+			complete: function () {
+			},
+			error: function (result) {
+				$('#test').text(result);
+			}
+		});
+	}
+</script>
